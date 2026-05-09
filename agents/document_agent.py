@@ -1,30 +1,34 @@
 """
-Document Agent — retrieves relevant chunks from uploaded PDFs.
-
-Placeholder for Day 1. Full RAG pipeline comes on Day 2.
+Document Agent — retrieves relevant chunks from uploaded PDFs
+using ChromaDB vector search.
 """
 
 from state import AgentState
+from tools.rag_tool import search_documents
 
 
 def document_agent_node(state: AgentState) -> dict:
     """
     Search uploaded documents for relevant information.
-    
-    Day 1: Returns placeholder.
-    Day 2: Connects to ChromaDB with real PDF retrieval.
+    Uses ChromaDB similarity search to find the best matching chunks.
     """
     query = state["query"]
 
-    doc_results = [
-        {
-            "content": f"[Placeholder] No documents indexed yet for: '{query}'",
-            "source": "No documents loaded",
-            "page": 0,
-        }
-    ]
+    results = search_documents(query, top_k=4)
 
-    log_msg = "[Document Agent] Searched documents (placeholder — no PDFs indexed)"
+    if not results:
+        log_msg = "[Document Agent] No documents indexed — upload a PDF first"
+        doc_results = []
+    else:
+        log_msg = f"[Document Agent] Found {len(results)} relevant chunks"
+        doc_results = [
+            {
+                "content": r["content"],
+                "source": r["source"],
+                "page": r["page"],
+            }
+            for r in results
+        ]
 
     return {
         "doc_results": doc_results,

@@ -124,3 +124,19 @@ if __name__ == "__main__":
         print(f"  {log}")
 
     print(f"\nPlan was: {result['agent_plan']}")
+
+    # Test 3: SQL-specific query using documents
+    print("\n" + "=" * 50)
+    test_input["query"] = "How do I use GROUP BY in SQL?"
+    test_input["agent_logs"] = []
+
+    print(f"Query: '{test_input['query']}'")
+    print("-" * 50)
+
+    result = app.invoke(test_input)
+
+    print("\nAgent Logs:")
+    for log in result["agent_logs"]:
+        print(f"  {log}")
+
+    print(f"\nFinal Answer:\n{result['final_answer'][:500]}")
