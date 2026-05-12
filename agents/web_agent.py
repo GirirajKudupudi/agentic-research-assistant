@@ -1,30 +1,25 @@
 """
 Web Search Agent — searches the web via DuckDuckGo.
-
-Placeholder for Day 1. Full search integration comes on Day 3.
 """
 
 from state import AgentState
+from tools.search_tool import search_web
 
 
 def web_agent_node(state: AgentState) -> dict:
     """
-    Search the web for relevant information.
-    
-    Day 1: Returns placeholder.
-    Day 3: Connects to DuckDuckGo search.
+    Search the web for relevant information using DuckDuckGo.
     """
     query = state["query"]
 
-    web_results = [
-        {
-            "title": f"[Placeholder] Web search for: '{query}'",
-            "snippet": "Web search will be connected on Day 3.",
-            "url": "https://example.com",
-        }
-    ]
+    results = search_web(query, max_results=5)
 
-    log_msg = "[Web Agent] Searched web (placeholder — not connected yet)"
+    if not results:
+        log_msg = f"[Web Agent] No web results found for: '{query}'"
+        web_results = []
+    else:
+        log_msg = f"[Web Agent] Found {len(results)} web results"
+        web_results = results
 
     return {
         "web_results": web_results,
