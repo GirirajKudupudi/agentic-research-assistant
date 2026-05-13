@@ -95,7 +95,7 @@ if prompt := st.chat_input("Ask me anything..."):
         with st.spinner("Agents working..."):
             result = app.invoke({
                 "query": prompt,
-                "chat_history": [],
+               "chat_history": st.session_state.get("chat_history", []),
                 "doc_results": [],
                 "web_results": [],
                 "agent_plan": [],
@@ -126,3 +126,10 @@ if prompt := st.chat_input("Ask me anything..."):
     st.session_state.messages.append({"role": "assistant", "content": result["final_answer"]})
     st.session_state.agent_logs_history.append(None)  # placeholder for user msg
     st.session_state.agent_logs_history.append(result["agent_logs"])
+    # Save to chat history for memory
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+    st.session_state.chat_history.append({
+        "query": prompt,
+        "answer": result["final_answer"],
+    })
