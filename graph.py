@@ -11,6 +11,7 @@ from agents.coordinator import coordinator_node
 from agents.document_agent import document_agent_node
 from agents.web_agent import web_agent_node
 from agents.synthesis_agent import synthesis_agent_node
+from utils.error_handler import safe_node
 
 
 def route_after_coordinator(state: AgentState) -> str:
@@ -42,11 +43,10 @@ def build_graph():
     graph = StateGraph(AgentState)
 
     # Register all agent nodes
-    graph.add_node("coordinator", coordinator_node)
-    graph.add_node("document_agent", document_agent_node)
-    graph.add_node("web_agent", web_agent_node)
-    graph.add_node("synthesis_agent", synthesis_agent_node)
-
+   graph.add_node("coordinator", safe_node(coordinator_node, "Coordinator"))
+    graph.add_node("document_agent", safe_node(document_agent_node, "Document Agent"))
+    graph.add_node("web_agent", safe_node(web_agent_node, "Web Agent"))
+    graph.add_node("synthesis_agent", safe_node(synthesis_agent_node, "Synthesis Agent"))
     # Entry point
     graph.add_edge(START, "coordinator")
 
